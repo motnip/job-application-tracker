@@ -6,10 +6,9 @@ import com.motnip.applicationtracker.model.Application;
 import com.motnip.applicationtracker.controller.request.ApplicationRequest;
 import com.motnip.applicationtracker.service.JobApplicationService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/application")
@@ -19,20 +18,22 @@ public class JobPostController {
     private JobApplicationService service;
 
     @PostMapping
-    public Application addNewApplication(ApplicationRequest newApplication) {
+    public Application addNewApplication(@RequestBody ApplicationRequest newApplication) {
 
-        return Application.builder()
+        Application.ApplicationBuilder newApplicationBuilder =  Application.builder()
                 .companyName(newApplication.companyName())
                 .description(newApplication.description())
-                .notes(newApplication.notes()).build();
+                .notes(newApplication.notes());
+        Optional.ofNullable(newApplication.applicationDate()).ifPresent(newApplicationBuilder::applicationDate);
+        return newApplicationBuilder.build();
     }
 
-    @PatchMapping
+    @PatchMapping("/firstContact-date")
     public Application recordFirstContact(ApplicationFirstContactRequest firstContact) {
         return service.updateFirstContact(firstContact);
     }
 
-    @PatchMapping
+    @PatchMapping("/status")
     public Application updateApplication(ApplicationAdvancementUpdateRequest updateRequest) {
         return service.updateAdvancement(updateRequest);
     }

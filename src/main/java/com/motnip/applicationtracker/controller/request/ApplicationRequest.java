@@ -1,7 +1,9 @@
 package com.motnip.applicationtracker.controller.request;
 
+import java.time.LocalDate;
+
 public record ApplicationRequest(String companyName,
-        String description,
-        String notes)
-{
-        }
+                                 LocalDate applicationDate,
+                                 String description,
+                                 String notes) {
+}
