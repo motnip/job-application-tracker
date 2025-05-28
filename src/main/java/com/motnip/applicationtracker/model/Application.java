@@ -1,29 +1,53 @@
 package com.motnip.applicationtracker.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
+@Getter
+@Setter
 @Builder
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Entity(name = "applications")
 public class Application {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String companyName;
     @Builder.Default
     private LocalDate applicationDate = LocalDate.now();
     private String description;
-    private Instant firstContactDate;
+    private LocalDate firstContactDate;
     @Builder.Default
     private ApplicationStatus status = ApplicationStatus.WAITING;
-    private String notes;
+
+    @OneToMany(mappedBy = "application", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @Builder.Default
+    //@JsonManagedReference
+    private List<ApplicationNote> notesList = new ArrayList<>();
     @Builder.Default
     private Instant creationDate = Instant.now();
     private Instant updateDate;
+    
+    public void addNote(String note) {
+        notesList.add(ApplicationNote.builder()
+                .application(this)
+                .text(note).build());
+    }
+
+    public void addNote(ApplicationNote note) {
+        notesList.add(note);
+    }
+
+    public Application applicationDate(LocalDate applicationDate) {
+        Optional.ofNullable(applicationDate).ifPresent(this::setApplicationDate);
+        return this;
+    }
 }
