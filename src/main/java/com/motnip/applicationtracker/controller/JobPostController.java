@@ -8,7 +8,7 @@ import com.motnip.applicationtracker.controller.response.ApplicationNoteResponse
 import com.motnip.applicationtracker.model.Application;
 import com.motnip.applicationtracker.model.ApplicationStatus;
 import com.motnip.applicationtracker.service.ApplicationNoteService;
-import com.motnip.applicationtracker.service.JobApplicationService;
+import com.motnip.applicationtracker.service.ApplicationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,11 +18,11 @@ import java.util.List;
 @RequestMapping("/application")
 public class JobPostController {
 
-    private JobApplicationService applicationService;
-    private ApplicationNoteService serviceNote;
+    private final ApplicationService applicationService;
+    private final ApplicationNoteService serviceNote;
 
     @Autowired
-    public JobPostController(JobApplicationService applicationService, ApplicationNoteService serviceNote) {
+    public JobPostController(ApplicationService applicationService, ApplicationNoteService serviceNote) {
         this.applicationService = applicationService;
         this.serviceNote = serviceNote;
     }

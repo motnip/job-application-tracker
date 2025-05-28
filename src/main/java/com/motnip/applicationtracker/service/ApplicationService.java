@@ -19,12 +19,12 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Slf4j
 @Service
-public class JobApplicationService {
+public class ApplicationService {
 
     private final ApplicationRepository repository;
 
     @Autowired
-    public JobApplicationService(ApplicationRepository repository) {
+    public ApplicationService(ApplicationRepository repository) {
         this.repository = repository;
     }
 
