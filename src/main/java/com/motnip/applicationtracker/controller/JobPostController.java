@@ -52,7 +52,16 @@ public class JobPostController {
 
     @GetMapping
     public List<ApplicationResponse> getAllApplication() {
-        return applicationService.getAllApplication();
+        return applicationService.getAllApplication().stream()
+                .map(application -> ApplicationResponse.builder()
+                        .id(application.getId())
+                        .companyName(application.getCompanyName())
+                        .description(application.getDescription())
+                        .applicationDate(application.getApplicationDate())
+                        .firstContactDate(application.getFirstContactDate())
+                        .status(application.getStatus())
+                        .build())
+                .toList();
     }
 
     @GetMapping("/{id}/notes")
