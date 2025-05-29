@@ -3,6 +3,7 @@ package com.motnip.applicationtracker.service;
 import com.motnip.applicationtracker.controller.response.ApplicationNoteResponse;
 import com.motnip.applicationtracker.model.Application;
 import com.motnip.applicationtracker.model.ApplicationNote;
+import com.motnip.applicationtracker.model.ApplicationNoteDTO;
 import com.motnip.applicationtracker.repository.ApplicationNoteRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +23,10 @@ public class ApplicationNoteService {
         this.repository = repository;
     }
 
-    public List<ApplicationNoteResponse> getAllNotesByApplicationId(Long applicationId) {
+    public List<ApplicationNoteDTO> getAllNotesByApplicationId(Long applicationId) {
         return repository.findAllByApplicationId(applicationId)
                 .stream().map(
-                        n -> ApplicationNoteResponse.builder()
+                        n -> ApplicationNoteDTO.builder()
                                 .id(n.getId())
                                 .text(n.getText())
                                 .creationTime(n.getCreationTime())
@@ -34,7 +35,7 @@ public class ApplicationNoteService {
                 ).collect(Collectors.toList());
     }
 
-    public ApplicationNoteResponse addNewNote(Application application, String noteText) {
+    public ApplicationNoteDTO addNewNote(Application application, String noteText) {
         var note = repository.save(
                 ApplicationNote.builder()
                         .application(application)
@@ -42,7 +43,7 @@ public class ApplicationNoteService {
                         .build()
         );
 
-        return ApplicationNoteResponse.builder()
+        return ApplicationNoteDTO.builder()
                 .id(note.getId())
                 .text(note.getText())
                 .creationTime(note.getCreationTime())

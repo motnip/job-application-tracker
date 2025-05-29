@@ -5,5 +5,5 @@ import lombok.Builder;
 import java.time.Instant;
 
 @Builder(toBuilder = true)
-public record ApplicationNoteDAO(Long id, String text, Instant creationTime, Instant updateTime) {
+public record ApplicationNoteDTO(Long id, String text, Instant creationTime, Instant updateTime) {
 }

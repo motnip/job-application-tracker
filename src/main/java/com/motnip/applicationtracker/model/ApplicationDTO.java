@@ -7,13 +7,12 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Builder(toBuilder = true)
-public record ApplicationDAO(
+public record ApplicationDTO(
         Long id,
         String companyName,
         LocalDate applicationDate,
         String description, LocalDate firstContactDate,
         ApplicationStatus status,
-        List<ApplicationNoteDAO> notes,
         Instant creationDate,
         Instant updateDate
 ) {

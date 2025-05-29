@@ -12,7 +12,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -22,13 +21,15 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 public class ApplicationService {
 
     private final ApplicationRepository repository;
+    private final ApplicationNoteService applicationNoteService;
 
     @Autowired
-    public ApplicationService(ApplicationRepository repository) {
+    public ApplicationService(ApplicationRepository repository, ApplicationNoteService applicationNoteService) {
         this.repository = repository;
+        this.applicationNoteService = applicationNoteService;
     }
 
-    public Application save(ApplicationRequest request) {
+    public ApplicationWithNotesDTO save(ApplicationRequest request) {
 
         log.debug("Salvo application");
 
@@ -41,38 +42,62 @@ public class ApplicationService {
                 .creationTime(Instant.now())
                 .updateTime(Instant.now())
                 .build());
-        return repository.save(application);
+        var newApplication = repository.save(application);
+
+        return ApplicationWithNotesDTO.builder()
+                .id(newApplication.getId())
+                .companyName(newApplication.getCompanyName())
+                .applicationDate(newApplication.getApplicationDate())
+                .description(newApplication.getDescription())
+                .firstContactDate(newApplication.getFirstContactDate())
+                .notes(applicationNoteService.getAllNotesByApplicationId(newApplication.getId()))
+                .status(newApplication.getStatus())
+                .creationDate(newApplication.getCreationDate())
+                .updateDate(newApplication.getUpdateDate())
+                .build();
+
     }
-
-
+    
     public List<Application> getAllApplication() {
         return repository.findAll();
     }
 
-    public Application updateFirstContact(Long applicationId, ApplicationFirstContactRequest updateRequest) {
+    public ApplicationDTO updateFirstContact(Long applicationId, ApplicationFirstContactRequest updateRequest) {
 
         var application = getApplicationById(applicationId);
         application.setFirstContactDate(updateRequest.fistContactDate());
         application.setUpdateDate(Instant.now());
-        return repository.save(application);
+        return toApplicationDTO(repository.save(application));
     }
 
-    public Application updateStatus(Long applicationId, ApplicationStatus newStatus) {
+    public ApplicationDTO updateStatus(Long applicationId, ApplicationStatus newStatus) {
 
         var application = getApplicationById(applicationId);
         application.setStatus(newStatus);
         application.setUpdateDate(Instant.now());
-        return repository.save(application);
+        return toApplicationDTO(repository.save(application));
     }
 
-    public Application updateProgress(Long applicationId, ApplicationProgressUpdateRequest progressUpdate) {
+    public ApplicationDTO updateProgress(Long applicationId, ApplicationProgressUpdateRequest progressUpdate) {
 
         throw new ResponseStatusException(INTERNAL_SERVER_ERROR, "NOT IMPLEMENTED YET");
     }
 
     private Application getApplicationById(Long applicationId) {
         return repository
-                .findById(applicationId)
-                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "item not found"));
+                .findById(applicationId).orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "item not found"));
+    }
+
+    private ApplicationDTO toApplicationDTO(Application application) {
+        return ApplicationDTO.builder()
+                .id(application.getId())
+                .companyName(application.getCompanyName())
+                .applicationDate(application.getApplicationDate())
+                .description(application.getDescription())
+                .firstContactDate(application.getFirstContactDate())
+                .status(application.getStatus())
+                .creationDate(application.getCreationDate())
+                .updateDate(application.getUpdateDate())
+                .build();
     }
 }
