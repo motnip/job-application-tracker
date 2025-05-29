@@ -3,9 +3,7 @@ package com.motnip.applicationtracker.service;
 import com.motnip.applicationtracker.controller.request.ApplicationFirstContactRequest;
 import com.motnip.applicationtracker.controller.request.ApplicationProgressUpdateRequest;
 import com.motnip.applicationtracker.controller.request.ApplicationRequest;
-import com.motnip.applicationtracker.controller.response.ApplicationResponse;
-import com.motnip.applicationtracker.model.Application;
-import com.motnip.applicationtracker.model.ApplicationStatus;
+import com.motnip.applicationtracker.model.*;
 import com.motnip.applicationtracker.repository.ApplicationRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,29 +36,25 @@ public class JobApplicationService {
                 .companyName(request.companyName())
                 .applicationDate(request.applicationDate())
                 .build();
-        application.addNote(request.notes());
-        application = repository.save(application);
-
-        return application;
-
+        application.addNote(ApplicationNote.builder()
+                .text(request.note())
+                .creationTime(Instant.now())
+                .updateTime(Instant.now())
+                .build());
+        return repository.save(application);
     }
 
-    public List<ApplicationResponse> getAllApplication() {
-        return repository.findAll()
-                .stream()
-                .map(a -> ApplicationResponse.builder()
-                        .id(a.getId())
-                        .companyName(a.getCompanyName())
-                        .description(a.getDescription())
-                        .applicationDate(a.getApplicationDate())
-                        .firstContactDate(a.getFirstContactDate())
-                        .status(a.getStatus())
-                        .build()).collect(Collectors.toList());
+
+    public List<Application> getAllApplication() {
+        return repository.findAll();
     }
 
     public Application updateFirstContact(Long applicationId, ApplicationFirstContactRequest updateRequest) {
 
-        throw new ResponseStatusException(INTERNAL_SERVER_ERROR, "NOT IMPLEMENTED YET");
+        var application = getApplicationById(applicationId);
+        application.setFirstContactDate(updateRequest.fistContactDate());
+        application.setUpdateDate(Instant.now());
+        return repository.save(application);
     }
 
     public Application updateStatus(Long applicationId, ApplicationStatus newStatus) {

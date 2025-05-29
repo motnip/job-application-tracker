@@ -31,11 +31,11 @@ public class Application {
     @OneToMany(mappedBy = "application", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @Builder.Default
     //@JsonManagedReference
-    private List<ApplicationNote> notesList = new ArrayList<>();
+    private List<ApplicationNote> notes = new ArrayList<>();
     @Builder.Default
     private Instant creationDate = Instant.now();
     private Instant updateDate;
-    
+
     public void addNote(String note) {
         notesList.add(ApplicationNote.builder()
                 .application(this)
@@ -43,9 +43,9 @@ public class Application {
     }
 
     public void addNote(ApplicationNote note) {
-        notesList.add(note);
+        note.setApplication(this);
+        notes.add(note);
     }
-
     public Application applicationDate(LocalDate applicationDate) {
         Optional.ofNullable(applicationDate).ifPresent(this::setApplicationDate);
         return this;
