@@ -6,6 +6,6 @@ import java.time.LocalDate;
 
 public record ApplicationFirstContactRequest(
         LocalDate fistContactDate,
-        String notes,
-        ApplicationStatus newStatus){
+        String note,
+        ApplicationStatus status){
 }

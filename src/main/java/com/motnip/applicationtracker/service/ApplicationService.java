@@ -57,7 +57,7 @@ public class ApplicationService {
                 .build();
 
     }
-    
+
     public List<Application> getAllApplication() {
         return repository.findAll();
     }
@@ -66,7 +66,11 @@ public class ApplicationService {
 
         var application = getApplicationById(applicationId);
         application.setFirstContactDate(updateRequest.fistContactDate());
+        application.setStatus(updateRequest.status());
         application.setUpdateDate(Instant.now());
+
+        applicationNoteService.addNewNote(application,updateRequest.note());
+
         return toApplicationDTO(repository.save(application));
     }
 
