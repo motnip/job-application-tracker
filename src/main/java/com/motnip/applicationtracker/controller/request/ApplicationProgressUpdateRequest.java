@@ -1,8 +1,8 @@
 package com.motnip.applicationtracker.controller.request;
 
-import com.motnip.applicationtracker.model.ApplicationStatus;
+import com.motnip.applicationtracker.model.ApplicationState;
 
 public record ApplicationProgressUpdateRequest(
         String notes,
-        ApplicationStatus newStatus){
+        ApplicationState newStatus){
 }

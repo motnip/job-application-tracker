@@ -83,7 +83,7 @@ public class ApplicationService {
         return toApplicationDTO(repository.save(application));
     }
 
-    public ApplicationDTO updateStatus(Long applicationId, ApplicationStatus newStatus) {
+    public ApplicationDTO updateStatus(Long applicationId, ApplicationState newStatus) {
 
         var application = getApplicationById(applicationId);
         application.setStatus(newStatus);

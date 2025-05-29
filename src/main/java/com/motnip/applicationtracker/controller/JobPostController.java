@@ -36,7 +36,7 @@ public class JobPostController {
     }
 
     @PatchMapping("/{applicationId}/status")
-    public ApplicationDTO updateApplication(@PathVariable Long applicationId, @RequestParam ApplicationStatus newStatus) {
+    public ApplicationDTO updateApplication(@PathVariable Long applicationId, @RequestParam ApplicationState newStatus) {
         return applicationService.updateStatus(applicationId, newStatus);
     }
 

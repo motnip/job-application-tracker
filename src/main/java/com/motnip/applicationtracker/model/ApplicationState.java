@@ -1,6 +1,6 @@
 package com.motnip.applicationtracker.model;
 
-public enum ApplicationStatus {
+public enum ApplicationState {
 
     WAITING,
     IN_PROGRESS,

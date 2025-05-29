@@ -7,13 +7,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
-import static com.motnip.applicationtracker.model.ApplicationStatus.*;
+import static com.motnip.applicationtracker.model.ApplicationState.*;
 
 @Component
 public class ApplicationStateHandler {
 
 
-    private HashMap<ApplicationStatus, List<ApplicationStatus>> stateTransitions;
+    private HashMap<ApplicationState, List<ApplicationState>> stateTransitions;
 
     public ApplicationStateHandler() {
         stateTransitions = new HashMap<>();
@@ -21,7 +21,7 @@ public class ApplicationStateHandler {
         stateTransitions.put(IN_PROGRESS, Arrays.asList(REJECTED, CONFIRMED, CANCELED));
     }
 
-    public List<ApplicationStatus> getNextStates(ApplicationStatus currentState) {
+    public List<ApplicationState> getNextStates(ApplicationState currentState) {
         var optionalNextStates = Optional.ofNullable(stateTransitions.get(currentState));
         if (optionalNextStates.isPresent()) {
             return optionalNextStates.get();
@@ -30,9 +30,9 @@ public class ApplicationStateHandler {
         }
     }
 
-    public ApplicationStatus validateStateChange(ApplicationStatus currentStates, ApplicationStatus nextState) {
+    public ApplicationState validateStateChange(ApplicationState currentStates, ApplicationState nextState) {
 
-        List<ApplicationStatus> nextValidStates = getNextStates(currentStates);
+        List<ApplicationState> nextValidStates = getNextStates(currentStates);
         if (!nextValidStates.contains(nextState)) {
             throw new IllegalStateException("Invalid status transition from " + currentStates + " to " + nextState);
         }

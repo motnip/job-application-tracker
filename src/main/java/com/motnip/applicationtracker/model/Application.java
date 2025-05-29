@@ -26,7 +26,7 @@ public class Application {
     private String description;
     private LocalDate firstContactDate;
     @Builder.Default
-    private ApplicationStatus status = ApplicationStatus.WAITING;
+    private ApplicationState status = ApplicationStatus.WAITING;
 
     @OneToMany(mappedBy = "application", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @Builder.Default

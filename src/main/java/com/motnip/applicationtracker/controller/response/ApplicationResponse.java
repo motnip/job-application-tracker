@@ -1,6 +1,6 @@
 package com.motnip.applicationtracker.controller.response;
 
-import com.motnip.applicationtracker.model.ApplicationStatus;
+import com.motnip.applicationtracker.model.ApplicationState;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,5 +17,5 @@ public class ApplicationResponse {
     private String description;
     private LocalDate applicationDate;
     private LocalDate firstContactDate;
-    private ApplicationStatus status;
+    private ApplicationState status;
 }
