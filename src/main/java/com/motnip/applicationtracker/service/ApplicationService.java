@@ -7,6 +7,7 @@ import com.motnip.applicationtracker.model.*;
 import com.motnip.applicationtracker.repository.ApplicationRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -22,11 +23,13 @@ public class ApplicationService {
 
     private final ApplicationRepository repository;
     private final ApplicationNoteService applicationNoteService;
+    private final ApplicationStateHandler applicationStatusHandler;
 
     @Autowired
-    public ApplicationService(ApplicationRepository repository, ApplicationNoteService applicationNoteService) {
+    public ApplicationService(ApplicationRepository repository, ApplicationNoteService applicationNoteService, ApplicationStateHandler applicationStatusHandler) {
         this.repository = repository;
         this.applicationNoteService = applicationNoteService;
+        this.applicationStatusHandler = applicationStatusHandler;
     }
 
     public ApplicationWithNotesDTO save(ApplicationRequest request) {
@@ -66,10 +69,16 @@ public class ApplicationService {
 
         var application = getApplicationById(applicationId);
         application.setFirstContactDate(updateRequest.fistContactDate());
-        application.setStatus(updateRequest.status());
+        try {
+            application.setStatus(applicationStatusHandler
+                    .validateStateChange(application.getStatus(), updateRequest.status())
+            );
+        } catch (IllegalStateException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Status change not allowed: " + e.getMessage());
+        }
         application.setUpdateDate(Instant.now());
 
-        applicationNoteService.addNewNote(application,updateRequest.note());
+        applicationNoteService.addNewNote(application, updateRequest.note());
 
         return toApplicationDTO(repository.save(application));
     }

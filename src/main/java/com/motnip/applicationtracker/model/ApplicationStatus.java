@@ -6,7 +6,6 @@ public enum ApplicationStatus {
     IN_PROGRESS,
     CONFIRMED,
     REJECTED,
-    STOPPED,
     CANCELED,
     EXPIRED
 }
