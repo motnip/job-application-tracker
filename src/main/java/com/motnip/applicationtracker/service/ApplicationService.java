@@ -23,13 +23,11 @@ public class ApplicationService {
 
     private final ApplicationRepository repository;
     private final ApplicationNoteService applicationNoteService;
-    private final ApplicationStateHandler applicationStatusHandler;
 
     @Autowired
-    public ApplicationService(ApplicationRepository repository, ApplicationNoteService applicationNoteService, ApplicationStateHandler applicationStatusHandler) {
+    public ApplicationService(ApplicationRepository repository, ApplicationNoteService applicationNoteService) {
         this.repository = repository;
         this.applicationNoteService = applicationNoteService;
-        this.applicationStatusHandler = applicationStatusHandler;
     }
 
     public ApplicationWithNotesDTO save(ApplicationRequest request) {
@@ -54,7 +52,7 @@ public class ApplicationService {
                 .description(newApplication.getDescription())
                 .firstContactDate(newApplication.getFirstContactDate())
                 .notes(applicationNoteService.getAllNotesByApplicationId(newApplication.getId()))
-                .status(newApplication.getStatus())
+                .status(newApplication.getState())
                 .creationDate(newApplication.getCreationDate())
                 .updateDate(newApplication.getUpdateDate())
                 .build();
@@ -70,10 +68,9 @@ public class ApplicationService {
         var application = getApplicationById(applicationId);
         application.setFirstContactDate(updateRequest.fistContactDate());
         try {
-            application.setStatus(applicationStatusHandler
-                    .validateStateChange(application.getStatus(), updateRequest.status())
-            );
+            application.setState(updateRequest.status());
         } catch (IllegalStateException e) {
+            //TODO use global exception handler
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Status change not allowed: " + e.getMessage());
         }
         application.setUpdateDate(Instant.now());
@@ -83,10 +80,10 @@ public class ApplicationService {
         return toApplicationDTO(repository.save(application));
     }
 
-    public ApplicationDTO updateStatus(Long applicationId, ApplicationState newStatus) {
+    public ApplicationDTO updateState(Long applicationId, ApplicationState newState) {
 
         var application = getApplicationById(applicationId);
-        application.setStatus(newStatus);
+        application.setState(newState);
         application.setUpdateDate(Instant.now());
         return toApplicationDTO(repository.save(application));
     }
@@ -96,7 +93,7 @@ public class ApplicationService {
         throw new ResponseStatusException(INTERNAL_SERVER_ERROR, "NOT IMPLEMENTED YET");
     }
 
-    private Application getApplicationById(Long applicationId) {
+    public Application getApplicationById(Long applicationId) {
         return repository
                 .findById(applicationId).orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "item not found"));
     }
@@ -108,7 +105,7 @@ public class ApplicationService {
                 .applicationDate(application.getApplicationDate())
                 .description(application.getDescription())
                 .firstContactDate(application.getFirstContactDate())
-                .status(application.getStatus())
+                .state(application.getState())
                 .creationDate(application.getCreationDate())
                 .updateDate(application.getUpdateDate())
                 .build();

@@ -11,7 +11,7 @@ public record ApplicationDTO(
         String companyName,
         LocalDate applicationDate,
         String description, LocalDate firstContactDate,
-        ApplicationState status,
+        ApplicationState state,
         Instant creationDate,
         Instant updateDate
 ) {

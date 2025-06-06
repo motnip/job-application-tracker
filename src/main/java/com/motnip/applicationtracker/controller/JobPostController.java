@@ -1,6 +1,7 @@
 package com.motnip.applicationtracker.controller;
 
 import com.motnip.applicationtracker.controller.request.ApplicationFirstContactRequest;
+import com.motnip.applicationtracker.controller.request.ApplicationNoteRequest;
 import com.motnip.applicationtracker.controller.request.ApplicationProgressUpdateRequest;
 import com.motnip.applicationtracker.controller.request.ApplicationRequest;
 import com.motnip.applicationtracker.controller.response.ApplicationResponse;
@@ -37,7 +38,7 @@ public class JobPostController {
 
     @PatchMapping("/{applicationId}/status")
     public ApplicationDTO updateApplication(@PathVariable Long applicationId, @RequestParam ApplicationState newStatus) {
-        return applicationService.updateStatus(applicationId, newStatus);
+        return applicationService.updateState(applicationId, newStatus);
     }
 
     /**
@@ -57,7 +58,7 @@ public class JobPostController {
                         .description(application.getDescription())
                         .applicationDate(application.getApplicationDate())
                         .firstContactDate(application.getFirstContactDate())
-                        .status(application.getStatus())
+                        .status(application.getState())
                         .build())
                 .toList();
     }

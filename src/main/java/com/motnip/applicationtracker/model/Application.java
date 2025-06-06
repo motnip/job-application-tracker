@@ -26,7 +26,7 @@ public class Application {
     private String description;
     private LocalDate firstContactDate;
     @Builder.Default
-    private ApplicationState status = ApplicationStatus.WAITING;
+    private ApplicationState state = ApplicationState.WAITING;
 
     @OneToMany(mappedBy = "application", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @Builder.Default
@@ -50,4 +50,11 @@ public class Application {
         Optional.ofNullable(applicationDate).ifPresent(this::setApplicationDate);
         return this;
     }
+
+    public void setState(ApplicationState newState) {
+        ApplicationStateHandler.validateStateChange(this.state, newState);
+        this.state = newState;
+    }
+
+
 }
