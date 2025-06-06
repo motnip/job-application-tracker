@@ -8,6 +8,7 @@ import com.motnip.applicationtracker.model.ApplicationState;
 import com.motnip.applicationtracker.model.ApplicationWithNotesDTO;
 import com.motnip.applicationtracker.service.ApplicationNoteService;
 import com.motnip.applicationtracker.service.ApplicationService;
+import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,8 +36,8 @@ public class ApplicationController {
     }
 
     @PatchMapping("/{applicationId}/state")
-    public ApplicationDTO updateApplication(@PathVariable Long applicationId, @RequestParam ApplicationState newStatus) {
-        return applicationService.updateState(applicationId, newStatus);
+    public ApplicationDTO updateApplication(@PathVariable Long applicationId, @RequestParam(name = "newstate") ApplicationState newState) {
+        return applicationService.updateState(applicationId, newState);
     }
 
     @GetMapping
