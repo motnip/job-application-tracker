@@ -1,7 +1,6 @@
 package com.motnip.applicationtracker.service;
 
 import com.motnip.applicationtracker.controller.request.ApplicationFirstContactRequest;
-import com.motnip.applicationtracker.controller.request.ApplicationProgressUpdateRequest;
 import com.motnip.applicationtracker.controller.request.ApplicationRequest;
 import com.motnip.applicationtracker.model.*;
 import com.motnip.applicationtracker.repository.ApplicationRepository;
@@ -14,7 +13,6 @@ import org.springframework.web.server.ResponseStatusException;
 import java.time.Instant;
 import java.util.List;
 
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Slf4j
@@ -68,14 +66,12 @@ public class ApplicationService {
         var application = getApplicationById(applicationId);
         application.setFirstContactDate(updateRequest.fistContactDate());
         try {
-            application.setState(updateRequest.status());
+            application.setState(updateRequest.state());
         } catch (IllegalStateException e) {
             //TODO use global exception handler
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Status change not allowed: " + e.getMessage());
         }
         application.setUpdateDate(Instant.now());
-
-        applicationNoteService.addNewNote(application, updateRequest.note());
 
         return toApplicationDTO(repository.save(application));
     }
