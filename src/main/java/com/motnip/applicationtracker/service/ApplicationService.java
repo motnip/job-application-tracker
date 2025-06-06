@@ -89,8 +89,10 @@ public class ApplicationService {
     }
 
     public ApplicationDTO updateProgress(Long applicationId, ApplicationProgressUpdateRequest progressUpdate) {
-
-        throw new ResponseStatusException(INTERNAL_SERVER_ERROR, "NOT IMPLEMENTED YET");
+        var result = updateState(applicationId, progressUpdate.state());
+        applicationNoteService.addNewNote(
+                getApplicationById(applicationId),progressUpdate.note());
+        return result;
     }
 
     public Application getApplicationById(Long applicationId) {
