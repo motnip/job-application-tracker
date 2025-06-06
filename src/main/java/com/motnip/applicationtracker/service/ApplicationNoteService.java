@@ -1,6 +1,5 @@
 package com.motnip.applicationtracker.service;
 
-import com.motnip.applicationtracker.controller.response.ApplicationNoteResponse;
 import com.motnip.applicationtracker.model.Application;
 import com.motnip.applicationtracker.model.ApplicationNote;
 import com.motnip.applicationtracker.model.ApplicationNoteDTO;

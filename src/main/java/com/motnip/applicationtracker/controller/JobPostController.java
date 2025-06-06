@@ -63,6 +63,14 @@ public class JobPostController {
                 .toList();
     }
 
+    @PostMapping("/{id}/notes")
+    public ApplicationNoteDTO addApplicationNotes(@PathVariable(name = "id") Long applicationId, @RequestBody ApplicationNoteRequest applicationNoteRequest) {
+        return serviceNote.addNewNote(applicationService.getApplicationById(applicationId),
+                applicationNoteRequest.text()
+        );
+    }
+
+
     @GetMapping("/{id}/notes")
     public List<ApplicationNoteDTO> getApplicationNotes(@PathVariable(name = "id") Long applicationId) {
         return serviceNote.getAllNotesByApplicationId(applicationId);
