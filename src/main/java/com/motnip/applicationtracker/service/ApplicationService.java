@@ -88,13 +88,6 @@ public class ApplicationService {
         return toApplicationDTO(repository.save(application));
     }
 
-    public ApplicationDTO updateProgress(Long applicationId, ApplicationProgressUpdateRequest progressUpdate) {
-        var result = updateState(applicationId, progressUpdate.state());
-        applicationNoteService.addNewNote(
-                getApplicationById(applicationId),progressUpdate.note());
-        return result;
-    }
-
     public Application getApplicationById(Long applicationId) {
         return repository
                 .findById(applicationId).orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "item not found"));

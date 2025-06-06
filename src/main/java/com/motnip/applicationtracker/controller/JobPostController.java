@@ -36,17 +36,9 @@ public class JobPostController {
         return applicationService.updateFirstContact(applicationId, firstContact);
     }
 
-    @PatchMapping("/{applicationId}/status")
+    @PatchMapping("/{applicationId}/state")
     public ApplicationDTO updateApplication(@PathVariable Long applicationId, @RequestParam ApplicationState newStatus) {
         return applicationService.updateState(applicationId, newStatus);
-    }
-
-    /**
-     * Aggiorno le note e lo stato dell'applicazione.
-     */
-    @PatchMapping("/{applicationId}/progress")
-    public ApplicationDTO updateApplication(@PathVariable Long applicationId, @RequestBody ApplicationProgressUpdateRequest progressUpdate) {
-        return applicationService.updateProgress(applicationId, progressUpdate);
     }
 
     @GetMapping
