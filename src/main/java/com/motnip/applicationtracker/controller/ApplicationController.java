@@ -15,12 +15,12 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/application")
-public class JobPostController {
+public class ApplicationController {
 
     private final ApplicationService applicationService;
 
     @Autowired
-    public JobPostController(ApplicationService applicationService, ApplicationNoteService serviceNote) {
+    public ApplicationController(ApplicationService applicationService, ApplicationNoteService serviceNote) {
         this.applicationService = applicationService;
     }
 
