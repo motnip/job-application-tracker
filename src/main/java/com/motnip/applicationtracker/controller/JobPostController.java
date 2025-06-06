@@ -1,11 +1,11 @@
 package com.motnip.applicationtracker.controller;
 
 import com.motnip.applicationtracker.controller.request.ApplicationFirstContactRequest;
-import com.motnip.applicationtracker.controller.request.ApplicationNoteRequest;
-import com.motnip.applicationtracker.controller.request.ApplicationProgressUpdateRequest;
 import com.motnip.applicationtracker.controller.request.ApplicationRequest;
 import com.motnip.applicationtracker.controller.response.ApplicationResponse;
-import com.motnip.applicationtracker.model.*;
+import com.motnip.applicationtracker.model.ApplicationDTO;
+import com.motnip.applicationtracker.model.ApplicationState;
+import com.motnip.applicationtracker.model.ApplicationWithNotesDTO;
 import com.motnip.applicationtracker.service.ApplicationNoteService;
 import com.motnip.applicationtracker.service.ApplicationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,12 +18,10 @@ import java.util.List;
 public class JobPostController {
 
     private final ApplicationService applicationService;
-    private final ApplicationNoteService serviceNote;
 
     @Autowired
     public JobPostController(ApplicationService applicationService, ApplicationNoteService serviceNote) {
         this.applicationService = applicationService;
-        this.serviceNote = serviceNote;
     }
 
     @PostMapping
@@ -53,18 +51,5 @@ public class JobPostController {
                         .status(application.getState())
                         .build())
                 .toList();
-    }
-
-    @PostMapping("/{id}/notes")
-    public ApplicationNoteDTO addApplicationNotes(@PathVariable(name = "id") Long applicationId, @RequestBody ApplicationNoteRequest applicationNoteRequest) {
-        return serviceNote.addNewNote(applicationService.getApplicationById(applicationId),
-                applicationNoteRequest.text()
-        );
-    }
-
-
-    @GetMapping("/{id}/notes")
-    public List<ApplicationNoteDTO> getApplicationNotes(@PathVariable(name = "id") Long applicationId) {
-        return serviceNote.getAllNotesByApplicationId(applicationId);
     }
 }
