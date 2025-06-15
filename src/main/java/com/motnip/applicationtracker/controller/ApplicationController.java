@@ -3,12 +3,11 @@ package com.motnip.applicationtracker.controller;
 import com.motnip.applicationtracker.controller.request.ApplicationFirstContactRequest;
 import com.motnip.applicationtracker.controller.request.ApplicationRequest;
 import com.motnip.applicationtracker.controller.response.ApplicationResponse;
-import com.motnip.applicationtracker.model.ApplicationDTO;
+import com.motnip.applicationtracker.dto.ApplicationDTO;
 import com.motnip.applicationtracker.model.ApplicationState;
-import com.motnip.applicationtracker.model.ApplicationWithNotesDTO;
+import com.motnip.applicationtracker.dto.ApplicationWithNotesDTO;
 import com.motnip.applicationtracker.service.ApplicationNoteService;
 import com.motnip.applicationtracker.service.ApplicationService;
-import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

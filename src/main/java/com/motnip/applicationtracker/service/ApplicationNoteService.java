@@ -2,7 +2,7 @@ package com.motnip.applicationtracker.service;
 
 import com.motnip.applicationtracker.model.Application;
 import com.motnip.applicationtracker.model.ApplicationNote;
-import com.motnip.applicationtracker.model.ApplicationNoteDTO;
+import com.motnip.applicationtracker.dto.ApplicationNoteDTO;
 import com.motnip.applicationtracker.repository.ApplicationNoteRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

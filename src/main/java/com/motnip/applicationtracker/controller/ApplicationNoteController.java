@@ -1,7 +1,7 @@
 package com.motnip.applicationtracker.controller;
 
 import com.motnip.applicationtracker.controller.request.ApplicationNoteRequest;
-import com.motnip.applicationtracker.model.ApplicationNoteDTO;
+import com.motnip.applicationtracker.dto.ApplicationNoteDTO;
 import com.motnip.applicationtracker.service.ApplicationNoteService;
 import com.motnip.applicationtracker.service.ApplicationService;
 import org.springframework.beans.factory.annotation.Autowired;

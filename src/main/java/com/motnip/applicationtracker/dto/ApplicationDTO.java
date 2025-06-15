@@ -1,19 +1,18 @@
-package com.motnip.applicationtracker.model;
+package com.motnip.applicationtracker.dto;
 
+import com.motnip.applicationtracker.model.ApplicationState;
 import lombok.Builder;
 
 import java.time.Instant;
 import java.time.LocalDate;
-import java.util.List;
 
 @Builder(toBuilder = true)
-public record ApplicationWithNotesDTO(
+public record ApplicationDTO(
         Long id,
         String companyName,
         LocalDate applicationDate,
         String description, LocalDate firstContactDate,
-        ApplicationState status,
-        List<ApplicationNoteDTO> notes,
+        ApplicationState state,
         Instant creationDate,
         Instant updateDate
 ) {

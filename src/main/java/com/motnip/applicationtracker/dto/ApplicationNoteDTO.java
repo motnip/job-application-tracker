@@ -1,4 +1,4 @@
-package com.motnip.applicationtracker.model;
+package com.motnip.applicationtracker.dto;
 
 import lombok.Builder;
 

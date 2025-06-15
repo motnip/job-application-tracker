@@ -2,6 +2,8 @@ package com.motnip.applicationtracker.service;
 
 import com.motnip.applicationtracker.controller.request.ApplicationFirstContactRequest;
 import com.motnip.applicationtracker.controller.request.ApplicationRequest;
+import com.motnip.applicationtracker.dto.ApplicationDTO;
+import com.motnip.applicationtracker.dto.ApplicationWithNotesDTO;
 import com.motnip.applicationtracker.model.*;
 import com.motnip.applicationtracker.repository.ApplicationRepository;
 import lombok.extern.slf4j.Slf4j;
