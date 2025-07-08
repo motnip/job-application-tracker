@@ -1,11 +1,10 @@
 package com.motnip.applicationtracker.model;
 
-import org.springframework.stereotype.Component;
+import com.motnip.applicationtracker.exception.JobApplicationStateException;
 
 import java.util.*;
 
 import static com.motnip.applicationtracker.model.ApplicationState.*;
-
 
 public class ApplicationStateHandler {
 
@@ -20,19 +19,19 @@ public class ApplicationStateHandler {
         stateTransitions.put(IN_PROGRESS, Arrays.asList(REJECTED, CONFIRMED, CANCELED));
     }*/
 
-    public static List<ApplicationState> getNextStates(ApplicationState currentState) {
+    private static List<ApplicationState> getNextStates(ApplicationState currentState) {
         var optionalNextStates = Optional.ofNullable(stateTransitions.get(currentState));
         if (optionalNextStates.isPresent()) {
             return optionalNextStates.get();
         } else {
-            throw new IllegalStateException("No valid transition for status: " + currentState);
+            throw new JobApplicationStateException(currentState.name());
         }
     }
 
-    public static boolean validateStateChange(ApplicationState currentStates, ApplicationState nextState) {
+    public static boolean validateStateChange(ApplicationState currentState, ApplicationState nextState) {
 
-        if (!getNextStates(currentStates).contains(nextState)) {
-            throw new IllegalStateException("Invalid status transition from " + currentStates + " to " + nextState);
+        if (!getNextStates(currentState).contains(nextState)) {
+            throw new JobApplicationStateException(currentState.name());
         }
         return true;
     }
