@@ -1,5 +1,6 @@
 package com.motnip.applicationtracker.model;
 
+import com.motnip.applicationtracker.exception.JobApplicationStateException;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -46,15 +47,17 @@ public class Application {
         note.setApplication(this);
         notes.add(note);
     }
+
     public Application applicationDate(LocalDate applicationDate) {
         Optional.ofNullable(applicationDate).ifPresent(this::setApplicationDate);
         return this;
     }
 
     public void setState(ApplicationState newState) {
-        ApplicationStateHandler.validateStateChange(this.state, newState);
-        this.state = newState;
+        if (ApplicationStateHandler.validateStateChange(this.state, newState)) {
+            this.state = newState;
+        } else {
+            throw new JobApplicationStateException(this.state.name());
+        }
     }
-
-
 }

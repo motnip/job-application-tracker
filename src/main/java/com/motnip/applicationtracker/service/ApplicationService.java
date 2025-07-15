@@ -4,11 +4,13 @@ import com.motnip.applicationtracker.controller.request.ApplicationFirstContactR
 import com.motnip.applicationtracker.controller.request.ApplicationRequest;
 import com.motnip.applicationtracker.dto.ApplicationDTO;
 import com.motnip.applicationtracker.dto.ApplicationWithNotesDTO;
-import com.motnip.applicationtracker.model.*;
+import com.motnip.applicationtracker.exception.JobApplicationStateException;
+import com.motnip.applicationtracker.model.Application;
+import com.motnip.applicationtracker.model.ApplicationNote;
+import com.motnip.applicationtracker.model.ApplicationState;
 import com.motnip.applicationtracker.repository.ApplicationRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -56,7 +58,6 @@ public class ApplicationService {
                 .creationDate(newApplication.getCreationDate())
                 .updateDate(newApplication.getUpdateDate())
                 .build();
-
     }
 
     public List<Application> getAllApplication() {
@@ -67,12 +68,7 @@ public class ApplicationService {
 
         var application = getApplicationById(applicationId);
         application.setFirstContactDate(updateRequest.fistContactDate());
-        try {
-            application.setState(updateRequest.state());
-        } catch (IllegalStateException e) {
-            //TODO use global exception handler
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Status change not allowed: " + e.getMessage());
-        }
+        setApplicationNewState(application, updateRequest.state());
         application.setUpdateDate(Instant.now());
 
         return toApplicationDTO(repository.save(application));
@@ -81,9 +77,18 @@ public class ApplicationService {
     public ApplicationDTO updateState(Long applicationId, ApplicationState newState) {
 
         var application = getApplicationById(applicationId);
-        application.setState(newState);
+        setApplicationNewState(application, newState);
         application.setUpdateDate(Instant.now());
         return toApplicationDTO(repository.save(application));
+    }
+
+    private void setApplicationNewState(Application application, ApplicationState newState) {
+        try {
+            application.setState(newState);
+        } catch (JobApplicationStateException e) {
+            log.error("Application ID [{}] - illegal change from state {} to {}", application.getId(), application.getState(), newState);
+            throw e;
+        }
     }
 
     public Application getApplicationById(Long applicationId) {

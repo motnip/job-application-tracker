@@ -30,8 +30,8 @@ public class ApplicationController {
     }
 
     @PatchMapping("/{applicationId}/firstContact-date")
-    public ApplicationDTO recordFirstContact(@PathVariable Long applicationId, @RequestBody ApplicationFirstContactRequest firstContact) {
-        return applicationService.updateFirstContact(applicationId, firstContact);
+    public ApplicationDTO recordFirstContact(@PathVariable Long applicationId, @RequestBody ApplicationFirstContactRequest firstContactRequest) {
+        return applicationService.updateFirstContact(applicationId, firstContactRequest);
     }
 
     @PatchMapping("/{applicationId}/state")
