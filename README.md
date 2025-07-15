@@ -13,11 +13,11 @@ A job application process is described by states. The state of the application f
 
 ### The application states
 - WAITING    : the application has been sent and waiting for a message from the company you applied for
-- IN_PROGRESS: the company replied positively and the inteview process is going on
+- IN_PROGRESS: the company replied positively and the interview process is going on
 - CONFIRMED  : the application processes ended successfully. Offered accepted
 - REJECTED   : The application ended unsuccessfully in any steps of the process.
 - CANCELED   : The application has been ended by the applicant
-- EXPIRED    : The company did not provided any ansewr
+- EXPIRED    : The company did not provide any answer
 
 ### Application state machine
 
