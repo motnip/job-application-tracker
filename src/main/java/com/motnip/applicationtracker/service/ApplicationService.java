@@ -55,7 +55,7 @@ public class ApplicationService {
                 .description(newApplication.getDescription())
                 .firstContactDate(newApplication.getFirstContactDate())
                 .notes(applicationNoteService.getAllNotesByApplicationId(newApplication.getId()))
-                .status(newApplication.getState())
+                .state(newApplication.getState())
                 .creationDate(newApplication.getCreationDate())
                 .build();
     }

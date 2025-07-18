@@ -101,7 +101,7 @@ class ApplicationServiceTest {
                 () -> assertEquals(request.applicationDate(), applicationDTO.applicationDate()),
                 () -> assertEquals(request.description(), applicationDTO.description()),
                 () -> assertNull(applicationDTO.firstContactDate()),
-                () -> assertEquals(ApplicationState.WAITING, applicationDTO.status()),
+                () -> assertEquals(ApplicationState.WAITING, applicationDTO.state()),
                 () -> assertEquals(1, actualApplication.getNotes().size()),
                 () -> assertEquals(request.note(), actualApplication.getNotes().get(0).getText()),
                 () -> assertNotNull(applicationDTO.creationDate()),

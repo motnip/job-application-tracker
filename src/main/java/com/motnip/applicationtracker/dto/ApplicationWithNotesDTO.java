@@ -13,7 +13,7 @@ public record ApplicationWithNotesDTO(
         String companyName,
         LocalDate applicationDate,
         String description, LocalDate firstContactDate,
-        ApplicationState status,
+        ApplicationState state,
         List<ApplicationNoteDTO> notes,
         Instant creationDate,
         Instant updateDate
