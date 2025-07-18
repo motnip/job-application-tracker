@@ -38,7 +38,7 @@ public class Application {
     private Instant updateDate;
 
     public void addNote(String note) {
-        notesList.add(ApplicationNote.builder()
+        notes.add(ApplicationNote.builder()
                 .application(this)
                 .text(note).build());
     }
