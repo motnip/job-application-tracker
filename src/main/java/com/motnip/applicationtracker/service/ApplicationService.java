@@ -38,6 +38,7 @@ public class ApplicationService {
 
         var application = Application.builder()
                 .companyName(request.companyName())
+                .description(request.description())
                 .applicationDate(request.applicationDate())
                 .build();
         application.addNote(ApplicationNote.builder()
@@ -56,7 +57,6 @@ public class ApplicationService {
                 .notes(applicationNoteService.getAllNotesByApplicationId(newApplication.getId()))
                 .status(newApplication.getState())
                 .creationDate(newApplication.getCreationDate())
-                .updateDate(newApplication.getUpdateDate())
                 .build();
     }
 
