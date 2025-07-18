@@ -26,7 +26,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ApplicationServiceTest {
@@ -56,6 +56,7 @@ class ApplicationServiceTest {
                 .firstContactDate(LocalDate.now())
                 .state(ApplicationState.WAITING)
                 .creationDate(Instant.now())
+                .updateDate(Instant.now())
                 .build();
     }
 
@@ -68,7 +69,6 @@ class ApplicationServiceTest {
                 .description("Job description and company description")
                 .note("Note about this application")
                 .build();
-
 
         //when
         when(repository.save(applicationArgumentCaptor.capture())).thenAnswer(invocation -> {
@@ -111,23 +111,79 @@ class ApplicationServiceTest {
     }
 
     @Test
-    void whenUpdateFirstContactThenUpdateFirstContaCtDateAndState() {
-
+    void testUpdateFirstContactDateAndStaus() {
         //given
-        ApplicationFirstContactRequest request = new ApplicationFirstContactRequest(LocalDate.now(), ApplicationState.REJECTED);
-
+        var firstContactRequest = ApplicationFirstContactRequest.builder()
+                .fistContactDate(LocalDate.now())
+                .state(ApplicationState.REJECTED)
+                .build();
 
         //when
-        when(repository.findById(applicationId)).thenReturn(Optional.ofNullable(application));
-        when(repository.save(application)).thenAnswer(invocation -> {
-            Application application = invocation.getArgument(0);
-            application.setState(ApplicationState.REJECTED);
-            return application;
+        when(repository.findById(eq(applicationId))).thenReturn(Optional.of(application));
+        when(repository.save(applicationArgumentCaptor.capture())).thenAnswer(invocation -> {
+            Application result = (Application) invocation.getArgument(0);
+            result.setId(applicationId);
+            result.setCreationDate(Instant.now());
+            result.setUpdateDate(Instant.now());
+            return result;
         });
-        ApplicationDTO result = sut.updateFirstContact(applicationId, request);
+        ApplicationDTO result = sut.updateFirstContact(applicationId, firstContactRequest);
 
         //then
+        Application actualApplication = applicationArgumentCaptor.getValue();
+        assertAll("actualApplication",
+                () -> assertEquals(1, actualApplication.getId()),
+                () -> assertEquals(application.getCompanyName(), actualApplication.getCompanyName()),
+                () -> assertEquals(application.getApplicationDate(), actualApplication.getApplicationDate()),
+                () -> assertEquals(application.getDescription(), actualApplication.getDescription()),
+                () -> assertEquals(firstContactRequest.fistContactDate(), actualApplication.getFirstContactDate()),
+                () -> assertEquals(firstContactRequest.state(), actualApplication.getState()),
+                () -> assertNotNull(actualApplication.getUpdateDate())
+        );
         assertDoesNotThrow(() -> JobApplicationStateException.class);
-        assertThat(result.state(), is(equals(ApplicationState.REJECTED)));
+        assertThat(result.state(), is(ApplicationState.REJECTED));
+    }
+
+    @Test
+    void when_UpdateFirstContactDate_And_NewStateNotValid_thenError() {
+        //given
+        var firstContactRequest = ApplicationFirstContactRequest.builder()
+                .fistContactDate(LocalDate.now())
+                .state(ApplicationState.CONFIRMED)
+                .build();
+
+        //when
+        when(repository.findById(eq(applicationId))).thenReturn(Optional.of(application));
+
+        //then
+        assertThrows(JobApplicationStateException.class, () -> sut.updateFirstContact(applicationId, firstContactRequest));
+        verify(repository, never()).save(any(Application.class));
+    }
+
+    @Test
+    void testUpdateApplicationState() {
+
+        //given
+        ApplicationState newState = ApplicationState.IN_PROGRESS;
+
+        //when
+        when(repository.findById(eq(applicationId))).thenReturn(Optional.of(application));
+        when(repository.save(applicationArgumentCaptor.capture())).thenAnswer(invocation -> invocation.getArgument(0));
+
+        ApplicationDTO result = sut.updateState(applicationId, newState);
+
+        //then
+        Application actualApplication = applicationArgumentCaptor.getValue();
+        assertAll("actualApplication",
+                () -> assertEquals(1, actualApplication.getId()),
+                () -> assertEquals(application.getCompanyName(), actualApplication.getCompanyName()),
+                () -> assertEquals(application.getApplicationDate(), actualApplication.getApplicationDate()),
+                () -> assertEquals(application.getDescription(), actualApplication.getDescription()),
+                () -> assertEquals(application.getFirstContactDate(), actualApplication.getFirstContactDate()),
+                () -> assertEquals(newState, actualApplication.getState()),
+                () -> assertNotEquals(application.getApplicationDate(), actualApplication.getUpdateDate())
+        );
+        assertDoesNotThrow(() -> JobApplicationStateException.class);
+        assertThat(result.state(), is(newState));
     }
 }
