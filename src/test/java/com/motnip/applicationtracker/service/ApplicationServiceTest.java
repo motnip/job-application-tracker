@@ -8,6 +8,7 @@ import com.motnip.applicationtracker.exception.JobApplicationStateException;
 import com.motnip.applicationtracker.model.Application;
 import com.motnip.applicationtracker.model.ApplicationState;
 import com.motnip.applicationtracker.repository.ApplicationRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -156,7 +157,8 @@ class ApplicationServiceTest {
         when(repository.findById(eq(applicationId))).thenReturn(Optional.of(application));
 
         //then
-        assertThrows(JobApplicationStateException.class, () -> sut.updateFirstContact(applicationId, firstContactRequest));
+        var actualException = assertThrows(JobApplicationStateException.class, () -> sut.updateFirstContact(applicationId, firstContactRequest));
+        assertThat(actualException.getMessage(), is("No valid transition from starting status: WAITING"));
         verify(repository, never()).save(any(Application.class));
     }
 
@@ -185,5 +187,23 @@ class ApplicationServiceTest {
         );
         assertDoesNotThrow(() -> JobApplicationStateException.class);
         assertThat(result.state(), is(newState));
+    }
+
+    @Test
+    void when_updateState_toInvalidState_then_throwError() {
+
+        //given
+        ApplicationState newState = ApplicationState.EXPIRED;
+
+        application.setState(ApplicationState.REJECTED);
+
+        //when
+        when(repository.findById(eq(applicationId))).thenReturn(Optional.of(application));
+
+        var actualException= assertThrows(JobApplicationStateException.class, () -> sut.updateState(applicationId, newState));
+
+        //then
+        verify(repository, never()).save(eq(application));
+        assertThat(actualException.getMessage(), is("No valid transition from starting status: REJECTED"));
     }
 }
