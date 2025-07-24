@@ -8,7 +8,9 @@ import com.motnip.applicationtracker.model.ApplicationState;
 import com.motnip.applicationtracker.dto.ApplicationWithNotesDTO;
 import com.motnip.applicationtracker.service.ApplicationNoteService;
 import com.motnip.applicationtracker.service.ApplicationService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,7 +32,7 @@ public class ApplicationController {
     }
 
     @PatchMapping("/{applicationId}/firstContact-date")
-    public ApplicationDTO recordFirstContact(@PathVariable Long applicationId, @RequestBody ApplicationFirstContactRequest firstContactRequest) {
+    public ApplicationDTO recordFirstContact(@PathVariable Long applicationId, @Validated @RequestBody ApplicationFirstContactRequest firstContactRequest) {
         return applicationService.updateFirstContact(applicationId, firstContactRequest);
     }
 
