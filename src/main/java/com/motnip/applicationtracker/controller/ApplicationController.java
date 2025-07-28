@@ -25,7 +25,7 @@ public class ApplicationController {
     }
 
     @PostMapping
-    public ApplicationWithNotesDTO addNewApplication(@RequestBody ApplicationRequest applicationRequest) {
+    public ApplicationWithNotesDTO addNewApplication(@RequestBody @Validated ApplicationRequest applicationRequest) {
         return applicationService.save(applicationRequest);
     }
 
