@@ -4,11 +4,9 @@ import com.motnip.applicationtracker.controller.request.ApplicationFirstContactR
 import com.motnip.applicationtracker.controller.request.ApplicationRequest;
 import com.motnip.applicationtracker.controller.response.ApplicationResponse;
 import com.motnip.applicationtracker.dto.ApplicationDTO;
-import com.motnip.applicationtracker.model.ApplicationState;
 import com.motnip.applicationtracker.dto.ApplicationWithNotesDTO;
-import com.motnip.applicationtracker.service.ApplicationNoteService;
+import com.motnip.applicationtracker.model.ApplicationState;
 import com.motnip.applicationtracker.service.ApplicationService;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +20,7 @@ public class ApplicationController {
     private final ApplicationService applicationService;
 
     @Autowired
-    public ApplicationController(ApplicationService applicationService, ApplicationNoteService serviceNote) {
+    public ApplicationController(ApplicationService applicationService) {
         this.applicationService = applicationService;
     }
 

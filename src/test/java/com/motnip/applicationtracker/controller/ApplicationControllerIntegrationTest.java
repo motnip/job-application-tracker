@@ -70,6 +70,5 @@ class ApplicationControllerIntegrationTest {
                         )).andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message")
                         .value("fistContactDate:date cannot be in the future"));
-
     }
 }
