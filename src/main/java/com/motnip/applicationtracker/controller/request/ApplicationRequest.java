@@ -10,6 +10,7 @@ import java.time.LocalDate;
 public record ApplicationRequest(
         @NotNull
         String companyName,
+        @NotNull
         @PastOrPresent
         LocalDate applicationDate,
         String description,
