@@ -47,10 +47,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
         ProblemDetail problemDetail = (ProblemDetail) body;
 
-        Map<String, Object> errorResponse = new HashMap<>();
-        errorResponse.put("timestamp", LocalDateTime.now());
-        errorResponse.put("message", Optional.ofNullable(problemDetail.getDetail()).orElse("Invalid request"));
-        errorResponse.put("status", problemDetail.getStatus());
+        var errorResponse = getErrorResponse(
+                Optional.ofNullable(problemDetail.getDetail()).orElse("Invalid request"),
+                problemDetail.getStatus()
+        );
 
         return new ResponseEntity<>(errorResponse, headers, statusCode);
     }
