@@ -31,29 +31,93 @@ A job application process is described by states. The state of the application f
         IN_PROGRESS --> CONFIRMED;
         IN_PROGRESS --> CANCELLED; 
 ```
-## API reference
-
-In progress..
-
 
 ## API Reference
 
-The Job application tracker ansers to: http://localhost:8080/
+The Job application tracker answers to: http://localhost:8080/
 
-#### API 1
+### Job application APIs
+List of API to handle application
+#### Create new application
 
 ```http
-  GET /
+  POST /application
+```
+##### Body request
+
+```json
+
+{
+    "companyName": [String],
+    "applicationDate":[String - yyyy-mm-dd],
+    "description":[String - job description or link to it],
+    "note":[String]
+}
+```
+#### Update job application status with the date when the company reply
+
+```http
+  PATCH /application/{{applicationId}}/firstContact-date
 ```
 
-| Parameter | Type     | Description                |
-| :-------- | :------- | :------------------------- |
-| |  | |
-| |  | |
+| Parameter       | Type   | Description                            |
+|:----------------|:-------|:---------------------------------------|
+| applicationId     | Number | application's ID                       |
 
+###### Body request
 
+```json
+{
+  "fistContactDate":[String - yyyy-mm-dd]
+  "state": [REJECTED|IN_PROGRESS]
+}
+```
+#### Change state of an existing application
 
+```http
+  PATCH /application/{{applicationId}}/state?newstate=IN_PROGRES
+```
+###### Body request
 
+| Parameter     | Type   | Description                                       |
+|:--------------|:-------|:--------------------------------------------------|
+| applicationId | Number | application's ID                                  |
+| newstate      | String | EXPIRED,REJECTED,IN_PROGESS, CONFIRMED, CANCELLED |
+
+#### List all the application
+
+```http
+  GET /application
+```
+### Note about a job application APIs 
+List of API to handle note about an application
+
+#### Add note to an existing application
+
+```http
+  POST /application/{{applicationId}}/notes
+```
+
+| Parameter       | Type   | Description                            |
+|:----------------|:-------|:---------------------------------------|
+| applicationId     | Number | application's ID                       |
+
+```json
+
+{
+    "text": [String]
+}
+```
+
+#### List note of the give note
+
+```http
+  GET /application/{{applicationId}}/notes
+```
+
+| Parameter       | Type   | Description                            |
+|:----------------|:-------|:---------------------------------------|
+| applicationId     | Number | application's ID                       |
 
 ## Run Locally
 
@@ -70,19 +134,6 @@ Go to the project directory
 ```bash
   cd my-project
 ```
-
-Install dependencies
-
-```bash
-  npm install
-```
-
-Start the server
-
-```bash
-  npm run start
-```
-
 
 ## 🔗 Links
 [![linkedin](https://img.shields.io/badge/linkedin-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/tomas-pinto-motnip/
