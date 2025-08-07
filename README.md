@@ -43,6 +43,7 @@ A job application process is described by states. The state of the application f
 
 The Job application tracker answers to: http://localhost:8080/
 
+Detailed API documentation can be find at: http://localhost:8080/swagger-ui/index.html
 ### Job application APIs
 List of API to handle application
 #### Create new application
