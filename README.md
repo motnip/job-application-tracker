@@ -1,5 +1,6 @@
 # Job Application Tracker
 
+## Description
 The "Job application tracker" is a software helping me keep track of the job application i sent.
 Here I can record different information about the job, the most relevant are:
 - The day the application has been sent
@@ -7,6 +8,12 @@ Here I can record different information about the job, the most relevant are:
 - When company replaied
 - If the process went further than the first HR interview
 
+### Technical note
+The code is in Java with Spring Boot.
+The database is in-memory database HD. The database will be migrated to Postgresql and Docker file will be added.
+### Note
+This project continuously evolve. Time to time there will be changes, improvements and new features.
+Scope of the project is to illustrate the way I work and develop software. 
 ## Application state
 
 A job application process is described by states. The state of the application follows a state-machine, listed in the next paragraph.
