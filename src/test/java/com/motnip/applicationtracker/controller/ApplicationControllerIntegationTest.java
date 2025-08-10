@@ -1,21 +1,14 @@
 package com.motnip.applicationtracker.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.motnip.applicationtracker.configuration.CommonTestContainerConfiguration;
+import com.motnip.applicationtracker.configuration.AbstractIntegrationTest;
 import com.motnip.applicationtracker.controller.request.ApplicationFirstContactRequest;
 import com.motnip.applicationtracker.controller.request.ApplicationRequest;
-import com.motnip.applicationtracker.model.Application;
 import com.motnip.applicationtracker.model.ApplicationState;
 import com.motnip.applicationtracker.repository.ApplicationRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
 
@@ -27,14 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Import(CommonTestContainerConfiguration.class)
-@SpringBootTest
-@AutoConfigureMockMvc
-class ApplicationControllerIntegrationTest {
-
-    @Autowired
-    private MockMvc mockMvc;
+class ApplicationControllerIntegrationTest extends AbstractIntegrationTest {
 
     @Autowired
     private ApplicationController sut;
