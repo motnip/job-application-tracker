@@ -8,7 +8,6 @@ import com.motnip.applicationtracker.exception.JobApplicationStateException;
 import com.motnip.applicationtracker.model.Application;
 import com.motnip.applicationtracker.model.ApplicationState;
 import com.motnip.applicationtracker.repository.ApplicationRepository;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
