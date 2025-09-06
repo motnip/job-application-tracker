@@ -5,7 +5,6 @@ import com.motnip.applicationtracker.controller.request.ApplicationRequest;
 import com.motnip.applicationtracker.controller.response.ApplicationResponse;
 import com.motnip.applicationtracker.dto.ApplicationDTO;
 import com.motnip.applicationtracker.dto.ApplicationWithNotesDTO;
-import com.motnip.applicationtracker.model.Application;
 import com.motnip.applicationtracker.model.ApplicationState;
 import com.motnip.applicationtracker.service.ApplicationService;
 import org.springframework.beans.factory.annotation.Autowired;

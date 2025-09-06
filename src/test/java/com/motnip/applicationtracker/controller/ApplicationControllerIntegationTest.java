@@ -9,7 +9,6 @@ import com.motnip.applicationtracker.repository.ApplicationRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.jdbc.Sql;
 
 import java.time.LocalDate;
 
@@ -48,7 +47,6 @@ class ApplicationControllerIntegrationTest extends AbstractIntegrationTest {
 
         assertThat(applicationRepository.findAll(), hasSize(1));
         //TODO check the body response
-
     }
 
     @Test
@@ -56,12 +54,11 @@ class ApplicationControllerIntegrationTest extends AbstractIntegrationTest {
 
         //then
         mockMvc.perform(get("/application/1")
-                .contentType(MediaType.APPLICATION_JSON)
-        ).andExpect(status().isOk())
+                        .contentType(MediaType.APPLICATION_JSON)
+                ).andExpect(status().isOk())
                 //TOMAS to improve
                 .andExpect(jsonPath("$.notes").isArray())
                 .andExpect(jsonPath("$.id").value(1));
-
     }
 
     @Test

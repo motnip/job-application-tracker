@@ -18,7 +18,7 @@ public class ApplicationNote {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="application_id")
+    @JoinColumn(name = "application_id")
     //@JsonBackReference
     private Application application;
     private String text;

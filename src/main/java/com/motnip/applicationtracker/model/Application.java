@@ -1,6 +1,5 @@
 package com.motnip.applicationtracker.model;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.motnip.applicationtracker.exception.JobApplicationStateException;
 import jakarta.persistence.*;
 import lombok.*;

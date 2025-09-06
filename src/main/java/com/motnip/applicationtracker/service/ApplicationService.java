@@ -76,7 +76,6 @@ public class ApplicationService {
                 .applicationDate(application.getApplicationDate())
                 .description(application.getDescription())
                 .firstContactDate(application.getFirstContactDate())
-                //TOMAS qui non va più in errore perchè ho il transactional
                 .notes(application.getNotes().stream()
                         .map(n -> ApplicationNoteDTO.builder()
                                 .id(n.getId())
