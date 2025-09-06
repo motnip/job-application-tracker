@@ -9,16 +9,15 @@ import com.motnip.applicationtracker.repository.ApplicationRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.jdbc.Sql;
 
 import java.time.LocalDate;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 
 class ApplicationControllerIntegrationTest extends AbstractIntegrationTest {
 
@@ -49,6 +48,19 @@ class ApplicationControllerIntegrationTest extends AbstractIntegrationTest {
 
         assertThat(applicationRepository.findAll(), hasSize(1));
         //TODO check the body response
+
+    }
+
+    @Test
+    void testGetApplicationByIdSuccessfully() throws Exception {
+
+        //then
+        mockMvc.perform(get("/application/1")
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isOk())
+                //TOMAS to improve
+                .andExpect(jsonPath("$.notes").isArray())
+                .andExpect(jsonPath("$.id").value(1));
 
     }
 

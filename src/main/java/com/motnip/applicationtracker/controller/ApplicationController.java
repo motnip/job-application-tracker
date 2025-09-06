@@ -5,6 +5,7 @@ import com.motnip.applicationtracker.controller.request.ApplicationRequest;
 import com.motnip.applicationtracker.controller.response.ApplicationResponse;
 import com.motnip.applicationtracker.dto.ApplicationDTO;
 import com.motnip.applicationtracker.dto.ApplicationWithNotesDTO;
+import com.motnip.applicationtracker.model.Application;
 import com.motnip.applicationtracker.model.ApplicationState;
 import com.motnip.applicationtracker.service.ApplicationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,15 @@ public class ApplicationController {
         return applicationService.save(applicationRequest);
     }
 
+    /**
+     * Return the application details and the notes
+     *
+     */
+    @GetMapping("/{applicationId}")
+    public ApplicationWithNotesDTO getApplicationById(@PathVariable Long applicationId) {
+        return applicationService.getById(applicationId);
+    }
+
     @PatchMapping("/{applicationId}/firstContact-date")
     public ApplicationDTO recordFirstContact(@PathVariable Long applicationId, @Validated @RequestBody ApplicationFirstContactRequest firstContactRequest) {
         return applicationService.updateFirstContact(applicationId, firstContactRequest);
@@ -39,6 +49,10 @@ public class ApplicationController {
         return applicationService.updateState(applicationId, newState);
     }
 
+    /**
+     * Return all the application details without notes
+     *
+     */
     @GetMapping
     public List<ApplicationResponse> getAllApplication() {
         return applicationService.getAllApplication().stream()

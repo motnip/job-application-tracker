@@ -1,5 +1,6 @@
 package com.motnip.applicationtracker.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.motnip.applicationtracker.exception.JobApplicationStateException;
 import jakarta.persistence.*;
 import lombok.*;
@@ -26,9 +27,9 @@ public class Application {
     private LocalDate applicationDate = LocalDate.now();
     private String description;
     private LocalDate firstContactDate;
+    @Enumerated(EnumType.STRING)
     @Builder.Default
     private ApplicationState state = ApplicationState.WAITING;
-
     @OneToMany(mappedBy = "application", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @Builder.Default
     //@JsonManagedReference

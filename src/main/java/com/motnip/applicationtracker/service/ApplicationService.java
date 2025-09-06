@@ -3,6 +3,7 @@ package com.motnip.applicationtracker.service;
 import com.motnip.applicationtracker.controller.request.ApplicationFirstContactRequest;
 import com.motnip.applicationtracker.controller.request.ApplicationRequest;
 import com.motnip.applicationtracker.dto.ApplicationDTO;
+import com.motnip.applicationtracker.dto.ApplicationNoteDTO;
 import com.motnip.applicationtracker.dto.ApplicationWithNotesDTO;
 import com.motnip.applicationtracker.exception.JobApplicationStateException;
 import com.motnip.applicationtracker.model.Application;
@@ -12,6 +13,7 @@ import com.motnip.applicationtracker.repository.ApplicationRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
@@ -62,6 +64,30 @@ public class ApplicationService {
 
     public List<Application> getAllApplication() {
         return repository.findAll();
+    }
+
+    @Transactional
+    public ApplicationWithNotesDTO getById(Long applicationId) {
+        var application = getApplicationById(applicationId);
+
+        return ApplicationWithNotesDTO.builder()
+                .id(application.getId())
+                .companyName(application.getCompanyName())
+                .applicationDate(application.getApplicationDate())
+                .description(application.getDescription())
+                .firstContactDate(application.getFirstContactDate())
+                //TOMAS qui non va più in errore perchè ho il transactional
+                .notes(application.getNotes().stream()
+                        .map(n -> ApplicationNoteDTO.builder()
+                                .id(n.getId())
+                                .text(n.getText())
+                                .creationTime(n.getCreationTime())
+                                .updateTime(n.getUpdateTime())
+                                .build()
+                        ).toList())
+                .state(application.getState())
+                .creationDate(application.getCreationDate())
+                .build();
     }
 
     public ApplicationDTO updateFirstContact(Long applicationId, ApplicationFirstContactRequest updateRequest) {
