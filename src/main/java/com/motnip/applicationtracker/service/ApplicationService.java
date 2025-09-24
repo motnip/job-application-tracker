@@ -12,13 +12,17 @@ import com.motnip.applicationtracker.model.ApplicationState;
 import com.motnip.applicationtracker.repository.ApplicationRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 
+import static com.motnip.applicationtracker.repository.ApplicationSpec.byCompanyName;
+import static com.motnip.applicationtracker.repository.ApplicationSpec.byState;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Slf4j
@@ -64,6 +68,15 @@ public class ApplicationService {
 
     public List<Application> getAllApplication() {
         return repository.findAll();
+    }
+
+    public List<Application> getAllApplicationByParams(String companyName, ApplicationState state) {
+
+        var spec = Specification.where(Optional.ofNullable(companyName)
+                .map(name -> byCompanyName(name)).orElse(null)
+        ).and(Optional.ofNullable(state).map(s -> byState(s)).orElse(null));
+
+        return repository.findAll(spec);
     }
 
     @Transactional

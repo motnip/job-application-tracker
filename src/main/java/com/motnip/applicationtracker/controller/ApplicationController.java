@@ -48,13 +48,15 @@ public class ApplicationController {
         return applicationService.updateState(applicationId, newState);
     }
 
+
     /**
      * Return all the application details without notes
      *
      */
     @GetMapping
-    public List<ApplicationResponse> getAllApplication() {
-        return applicationService.getAllApplication().stream()
+    public List<ApplicationResponse> getAllApplication(@RequestParam(name = "company_name",required = false ) String companyName,
+                                                       @RequestParam(required = false ) ApplicationState state) {
+        return applicationService.getAllApplicationByParams(companyName,state).stream()
                 .map(application -> ApplicationResponse.builder()
                         .id(application.getId())
                         .companyName(application.getCompanyName())

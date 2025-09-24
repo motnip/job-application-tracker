@@ -4,15 +4,22 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.motnip.applicationtracker.configuration.AbstractIntegrationTest;
 import com.motnip.applicationtracker.controller.request.ApplicationFirstContactRequest;
 import com.motnip.applicationtracker.controller.request.ApplicationRequest;
+import com.motnip.applicationtracker.model.Application;
 import com.motnip.applicationtracker.model.ApplicationState;
 import com.motnip.applicationtracker.repository.ApplicationRepository;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -45,7 +52,7 @@ class ApplicationControllerIntegrationTest extends AbstractIntegrationTest {
                 .content(objectMapper.writeValueAsString(request))
         ).andExpect(status().isOk());
 
-        assertThat(applicationRepository.findAll(), hasSize(1));
+        assertThat(applicationRepository.findAll(), hasSize(greaterThan(1)));
         //TODO check the body response
     }
 
@@ -60,6 +67,37 @@ class ApplicationControllerIntegrationTest extends AbstractIntegrationTest {
                 .andExpect(jsonPath("$.notes").isArray())
                 .andExpect(jsonPath("$.id").value(1));
     }
+
+    @ParameterizedTest
+    @MethodSource("provideTestParameters")
+    void testGetAllApplications(SearchFieldsTestParams params) throws Exception {
+
+        //then
+
+        List<Application> repositoryAll = applicationRepository.findAll();
+        System.out.println("Number of records: " + repositoryAll.size());
+
+        mockMvc.perform(get("/application")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .queryParam("company_name", params.getCompanyName())
+                        .queryParam("state",
+                                Optional.ofNullable(params.getState())
+                                        .map(s -> s.name())
+                                        .orElse(null)
+                        )
+                ).andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(params.getExcpectedMatchingResultNumber())));
+    }
+
+    static Stream<SearchFieldsTestParams> provideTestParameters() {
+        return Stream.of(
+                new SearchFieldsTestParams(null, ApplicationState.IN_PROGRESS, 3),
+                new SearchFieldsTestParams("TechCorp Solutions", null, 1),
+                new SearchFieldsTestParams("TechCorp Solutions", ApplicationState.IN_PROGRESS, 1),
+                new SearchFieldsTestParams("TechCorp Solutions", ApplicationState.REJECTED, 0)
+        );
+    }
+
 
     @Test
     void when_firstContactDateIsInTheFuture_then_Return400AndErrorMessage() throws Exception {

@@ -12,7 +12,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Import(CommonTestContainerConfiguration.class)
 @SpringBootTest
-@Sql(scripts = "/test_data_set/test-data.sql")
+@Sql(scripts = "/test_data_set/test-data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
 @AutoConfigureMockMvc
 public class AbstractIntegrationTest {
 
