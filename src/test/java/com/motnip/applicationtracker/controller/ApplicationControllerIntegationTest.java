@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -73,17 +74,18 @@ class ApplicationControllerIntegrationTest extends AbstractIntegrationTest {
     void testGetAllApplications(SearchFieldsTestParams params) throws Exception {
 
         //then
-
         List<Application> repositoryAll = applicationRepository.findAll();
         System.out.println("Number of records: " + repositoryAll.size());
 
         mockMvc.perform(get("/application")
                         .contentType(MediaType.APPLICATION_JSON)
                         .queryParam("company_name", params.getCompanyName())
-                        .queryParam("state",
-                                Optional.ofNullable(params.getState())
-                                        .map(s -> s.name())
-                                        .orElse(null)
+                        .queryParam("states",
+                                (String) Optional.ofNullable(params.getState())
+                                        .orElse(Collections.emptyList())
+                                        .stream()
+                                        .map(Enum::name)
+                                        .reduce("", (a, b) -> a + "," + b)
                         )
                 ).andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(params.getExcpectedMatchingResultNumber())));
@@ -91,10 +93,11 @@ class ApplicationControllerIntegrationTest extends AbstractIntegrationTest {
 
     static Stream<SearchFieldsTestParams> provideTestParameters() {
         return Stream.of(
-                new SearchFieldsTestParams(null, ApplicationState.IN_PROGRESS, 3),
+                new SearchFieldsTestParams(null, List.of(ApplicationState.IN_PROGRESS), 3),
                 new SearchFieldsTestParams("TechCorp Solutions", null, 1),
-                new SearchFieldsTestParams("TechCorp Solutions", ApplicationState.IN_PROGRESS, 1),
-                new SearchFieldsTestParams("TechCorp Solutions", ApplicationState.REJECTED, 0)
+                new SearchFieldsTestParams("TechCorp Solutions", List.of(ApplicationState.IN_PROGRESS), 1),
+                new SearchFieldsTestParams("TechCorp Solutions", List.of(ApplicationState.REJECTED), 0),
+                new SearchFieldsTestParams(null, List.of(ApplicationState.REJECTED, ApplicationState.WAITING), 2)
         );
     }
 

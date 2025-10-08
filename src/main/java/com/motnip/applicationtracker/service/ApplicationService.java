@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.motnip.applicationtracker.repository.ApplicationSpec.byCompanyName;
-import static com.motnip.applicationtracker.repository.ApplicationSpec.byState;
+import static com.motnip.applicationtracker.repository.ApplicationSpec.inStates;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Slf4j
@@ -70,11 +70,15 @@ public class ApplicationService {
         return repository.findAll();
     }
 
-    public List<Application> getAllApplicationByParams(String companyName, ApplicationState state) {
+    public List<Application> getAllApplicationByParams(String companyName, List<ApplicationState> states) {
 
         var spec = Specification.where(Optional.ofNullable(companyName)
                 .map(name -> byCompanyName(name)).orElse(null)
-        ).and(Optional.ofNullable(state).map(s -> byState(s)).orElse(null));
+        );
+
+        if (states != null && !states.isEmpty()) {
+            spec = spec.and(inStates(states));
+        }
 
         return repository.findAll(spec);
     }

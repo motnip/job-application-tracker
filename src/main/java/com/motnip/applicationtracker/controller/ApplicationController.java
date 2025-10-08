@@ -50,13 +50,13 @@ public class ApplicationController {
 
 
     /**
-     * Return all the application details without notes
+     * Return all the application details, without notes, matching the searching criteria
      *
      */
     @GetMapping
     public List<ApplicationResponse> getAllApplication(@RequestParam(name = "company_name",required = false ) String companyName,
-                                                       @RequestParam(required = false ) ApplicationState state) {
-        return applicationService.getAllApplicationByParams(companyName,state).stream()
+                                                       @RequestParam(required = false ) List<ApplicationState> states) {
+        return applicationService.getAllApplicationByParams(companyName,states).stream()
                 .map(application -> ApplicationResponse.builder()
                         .id(application.getId())
                         .companyName(application.getCompanyName())

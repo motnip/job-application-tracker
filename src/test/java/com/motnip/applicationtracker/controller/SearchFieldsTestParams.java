@@ -1,17 +1,18 @@
 package com.motnip.applicationtracker.controller;
 
 import com.motnip.applicationtracker.model.ApplicationState;
-import org.apache.commons.lang3.builder.ToStringBuilder;
 
-public class SearchFieldsTestParams{
+import java.util.List;
+
+public class SearchFieldsTestParams {
 
     private String companyName;
-    private ApplicationState state;
+    private List<ApplicationState> states;
     private int excpectedMatchingResultNumber;
 
-    public SearchFieldsTestParams(String companyName, ApplicationState state, int excpectedMatchingResultNumber) {
+    public SearchFieldsTestParams(String companyName, List<ApplicationState> states, int excpectedMatchingResultNumber) {
         this.companyName = companyName;
-        this.state = state;
+        this.states = states;
         this.excpectedMatchingResultNumber = excpectedMatchingResultNumber;
     }
 
@@ -19,21 +20,13 @@ public class SearchFieldsTestParams{
         return companyName;
     }
 
-    public ApplicationState getState() {
-        return state;
+    public List<ApplicationState> getState() {
+        return states;
     }
 
     public int getExcpectedMatchingResultNumber() {
         return excpectedMatchingResultNumber;
     }
 
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this)
-                .append("companyName", companyName)
-                .append("state", state)
-                .append("excpectedMatchingResultNumber", excpectedMatchingResultNumber)
-                .toString();
-    }
 }
 
